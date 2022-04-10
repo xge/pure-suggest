@@ -313,6 +313,9 @@ export default {
             ? "visible"
             : "hidden"
         )
+        .attr(
+          "class", d => (d % 10 != 0)?"is-hidden-touch":""
+        )
         .text((d) => d)
         .attr("fill", "grey");
 
