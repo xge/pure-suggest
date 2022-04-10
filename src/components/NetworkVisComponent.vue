@@ -69,7 +69,7 @@ import _ from "lodash";
 
 const RECT_SIZE = 20;
 const ENLARGE_FACTOR = 1.5;
-const margin = 20;
+const MARGIN = 20;
 
 export default {
   props: {
@@ -320,10 +320,12 @@ export default {
         this.label
           .attr(
             "transform",
-            (d) => `translate(${this.yearX(d)},${this.svgHeight - margin})`
+            (d) => `translate(${this.yearX(d)},${this.svgHeight - MARGIN
+          })`
           )
           .select("text")
-          .attr("y", -this.svgHeight + 2 * margin);
+          .attr("y", -this.svgHeight + 2 * MARGIN
+        );
       }
 
       this.simulation.nodes(this.graph.nodes);
