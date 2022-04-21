@@ -73,6 +73,7 @@ import AboutPage from "./components/AboutPage.vue";
 import KeyboardControlsPage from "./components/KeyboardControlsPage.vue";
 
 import Publication from "./Publication.js";
+import { logEvent } from "./Logging";
 import { saveAsFile } from "./Util.js";
 import { clearCache } from "./Cache.js";
 
@@ -109,6 +110,7 @@ export default {
   methods: {
     addPublicationsToSelection: async function (dois) {
       console.log(`Adding to selection publications with DOIs: ${dois}.`);
+      logEvent("Add Papers", dois)
       document.activeElement.blur();
       if (typeof dois === "string") {
         dois = [dois];
