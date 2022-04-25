@@ -67,6 +67,8 @@ import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
 import _ from "lodash";
 
+import { logEvent } from "@/Logging";
+
 const RECT_SIZE = 20;
 const ENLARGE_FACTOR = 1.5;
 const margin = 20;
@@ -107,6 +109,7 @@ export default {
     },
     isClusters: {
       handler: function () {
+        logEvent("Change Network Mode to", this.isClusters ? "Clusters" : "Timeline");
         this.initForces();
         this.plot(true);
       },

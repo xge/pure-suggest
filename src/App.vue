@@ -73,7 +73,7 @@ import AboutPage from "./components/AboutPage.vue";
 import KeyboardControlsPage from "./components/KeyboardControlsPage.vue";
 
 import Publication from "./Publication.js";
-import { logEvent } from "./Logging";
+import { logEvent } from "@/Logging";
 import { saveAsFile } from "./Util.js";
 import { clearCache } from "./Cache.js";
 
@@ -107,10 +107,18 @@ export default {
       return window.innerWidth <= 1023;
     },
   },
+  watch: {
+    isNetworkExpanded: function () {
+      logEvent("Change Network Size", this.isExpanded ? "Expand" : "Collapse");
+    },
+  },
   methods: {
     addPublicationsToSelection: async function (dois) {
       console.log(`Adding to selection publications with DOIs: ${dois}.`);
-      logEvent("Add Papers", dois)
+      dois.forEach((doi) => {
+        logEvent("Add Paper", doi)
+      });
+
       document.activeElement.blur();
       if (typeof dois === "string") {
         dois = [dois];
@@ -139,6 +147,7 @@ export default {
     },
 
     removePublication: async function (doi) {
+      logEvent("Remove Paper", doi)
       this.excludedPublicationsDois.add(doi);
       delete publications[doi];
       await this.updateSuggestions();
@@ -192,6 +201,7 @@ export default {
       boostKeywordString,
       preventUpdateSuggestions = false
     ) {
+      logEvent("Update Keywords", boostKeywordString.split(","))
       this.boostKeywords = boostKeywordString.toLowerCase().split(/,\s*/);
       if (!preventUpdateSuggestions) {
         await this.updateSuggestions();
@@ -231,16 +241,21 @@ export default {
     },
 
     clearActivePublication: function (source) {
-      this.activePublication = undefined;
-      this.selectedPublications
-        .concat(this.suggestedPublications)
-        .forEach((publication) => {
-          publication.isActive = false;
-          publication.isLinkedToActive = false;
-        });
-      console.log(
-        `Cleared any highlighted active publication, triggered by "${source}".`
-      );
+      if (this.activePublication) {
+        if (source !== "setting active publication") {
+          logEvent("Deactivate Paper", this.activePublication ? this.activePublication.doi : "")
+        }
+        this.activePublication = undefined;
+        this.selectedPublications
+          .concat(this.suggestedPublications)
+          .forEach((publication) => {
+            publication.isActive = false;
+            publication.isLinkedToActive = false;
+          });
+        console.log(
+          `Cleared any highlighted active publication, triggered by "${source}".`
+        );
+      }
     },
 
     activatePublicationComponent: function (publicationComponent) {
@@ -250,11 +265,13 @@ export default {
     },
 
     activatePublicationComponentByDoi: function (doi) {
+      logEvent("Activate Paper", doi)
       this.activatePublicationComponent(document.getElementById(doi));
       this.setActivePublication(doi);
     },
 
     exportSession: function () {
+      logEvent("Export Session", "JSON")
       let data = {
         selected: Object.keys(publications),
         excluded: Array.from(this.excludedPublicationsDois),
@@ -278,10 +295,12 @@ export default {
     },
 
     exportAllBibtex: function () {
+      logEvent("Export Session", "Bibtex")
       this.exportBibtex(this.selectedPublications);
     },
 
     exportSingleBibtex: function (publication) {
+      logEvent("Export Single Bibtex", publication.doi)
       this.exportBibtex([publication]);
     },
 
@@ -295,6 +314,7 @@ export default {
     },
 
     clearSelection: function () {
+      logEvent("Clear Selection")
       this.isOverlay = true;
       this.$buefy.dialog.confirm({
         message:
@@ -318,6 +338,7 @@ export default {
     },
 
     loadSession: function (session) {
+      logEvent("Load Session", session.selected, session.excluded, session.boost)
       console.log(`Loading session ${JSON.stringify(session)}`);
       if (!session || !session.selected) {
         this.showErrorMessage("Cannot read session state from JSON.");

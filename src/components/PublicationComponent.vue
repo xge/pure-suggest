@@ -147,7 +147,7 @@
           ><em> {{ publication.container }}. </em></span
         >
         <label><span class="key">D</span>OI:</label>
-        <a :href="publication.doiUrl">{{ publication.doi }}</a>
+        <a @click="logDoiClick(publication.doi)" :href="publication.doiUrl">{{ publication.doi }}</a>
       </div>
       <div v-if="publication.isActive" class="stats-and-links level is-size-7">
         <div class="level-left">
@@ -223,6 +223,8 @@
 </template>
 
 <script>
+import { logEvent } from "@/Logging";
+
 export default {
   name: "PublicationComponent",
   props: {
@@ -263,6 +265,12 @@ export default {
       return "";
     },
   },
+
+  methods: {
+    logDoiClick(doi) {
+      logEvent("DOI clicked", doi);
+    },
+  }
 };
 </script>
 
@@ -331,7 +339,7 @@ li.publication-component {
     border-width: 0.25rem;
   }
 
-  & .glyph > div:focus > div {  
+  & .glyph > div:focus > div {
     outline: 1px solid $dark;
     outline-offset: 0.1rem;
   }
