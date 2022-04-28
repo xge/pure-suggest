@@ -381,7 +381,7 @@ export default {
     },
 
     activatePublication: function (event, d) {
-      this.$emit("activate", d.publication.doi);
+      this.$emit("activate", d.publication.doi, 'network');
       event.stopPropagation();
     },
 

@@ -269,9 +269,9 @@ export default {
       }
     },
 
-    activatePublicationComponentByDoi: function (doi) {
+    activatePublicationComponentByDoi: function (doi, component) {
       if (doi !== this.activePublication?.doi) {
-        logEvent("Activate Paper", doi)
+        logEvent("Activate Paper", component, doi)
         this.setActivePublication(doi);
         this.activatePublicationComponent(document.getElementById(doi));
       }

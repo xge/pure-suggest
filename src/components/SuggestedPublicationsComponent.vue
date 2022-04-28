@@ -47,7 +47,7 @@ export default {
       this.$emit("remove", doi);
     },
     activatePublication: function (doi) {
-      this.$emit("activate", doi);
+      this.$emit("activate", doi, 'suggested');
     },
     exportSingleBibtex: function (publication) {
       this.$emit("exportSingleBibtex", publication);
