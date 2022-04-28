@@ -115,19 +115,16 @@ export default {
   methods: {
     addPublicationsToSelection: async function (dois) {
       console.log(`Adding to selection publications with DOIs: ${dois}.`);
-      if (Array.isArray(dois)) {
-        dois.forEach((doi) => {
-          logEvent("Add Paper", doi)
-        });
-      }
-      else {
-        logEvent("Add Paper", dois);
-      }
-
-      document.activeElement.blur();
       if (typeof dois === "string") {
         dois = [dois];
       }
+
+      dois.forEach((doi) => {
+        logEvent("Add Paper", doi)
+        console.log(this.suggestedPublications.find((o) => o.doi === doi));
+      });
+
+      document.activeElement.blur();
       let addedPublicationsCount = 0;
       let addedDoi = "";
       dois.forEach((doi) => {
