@@ -1,7 +1,12 @@
+const log = []
+
 export function logEvent(event, ...args) {
-  console.log(
-    `User Action: ${event},
-    ${new Date(Date.now()).toGMTString()},
-    ${args}`
+  log.push(
+    `${event}, ${new Date(Date.now()).toGMTString()}, ${args}`
   );
+  console.log(log)
+}
+
+export function getEventLog() {
+  return log.join('\n');
 }

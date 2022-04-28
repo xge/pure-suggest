@@ -40,6 +40,11 @@
         </b-navbar-dropdown>
       </template>
       <template #end>
+        <b-navbar-item>
+          <div>
+            <finish-study-button />
+          </div>
+        </b-navbar-item>
         <b-navbar-dropdown
           label="⋮"
           icon-left="dots-vertical"
@@ -83,7 +88,10 @@
 </template>
 
 <script>
+import FinishStudyButton from './FinishStudyButton.vue';
+
 export default {
+  components: { FinishStudyButton },
   name: "HeaderPanel",
   props: {
     isMobile: Boolean,
