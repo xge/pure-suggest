@@ -115,9 +115,14 @@ export default {
   methods: {
     addPublicationsToSelection: async function (dois) {
       console.log(`Adding to selection publications with DOIs: ${dois}.`);
-      dois.forEach((doi) => {
-        logEvent("Add Paper", doi)
-      });
+      if (Array.isArray(dois)) {
+        dois.forEach((doi) => {
+          logEvent("Add Paper", doi)
+        });
+      }
+      else {
+        logEvent("Add Paper", dois);
+      }
 
       document.activeElement.blur();
       if (typeof dois === "string") {
@@ -242,9 +247,9 @@ export default {
 
     clearActivePublication: function (source) {
       if (this.activePublication) {
-        if (source !== "setting active publication") {
-          logEvent("Deactivate Paper", this.activePublication ? this.activePublication.doi : "")
-        }
+        // if (source !== "setting active publication") {
+        //   logEvent("Deactivate Paper", this.activePublication ? this.activePublication.doi : "")
+        // }
         this.activePublication = undefined;
         this.selectedPublications
           .concat(this.suggestedPublications)
@@ -267,8 +272,8 @@ export default {
     activatePublicationComponentByDoi: function (doi) {
       if (doi !== this.activePublication?.doi) {
         logEvent("Activate Paper", doi)
-        this.activatePublicationComponent(document.getElementById(doi));
         this.setActivePublication(doi);
+        this.activatePublicationComponent(document.getElementById(doi));
       }
     },
 
