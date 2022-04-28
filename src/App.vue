@@ -265,9 +265,11 @@ export default {
     },
 
     activatePublicationComponentByDoi: function (doi) {
-      logEvent("Activate Paper", doi)
-      this.activatePublicationComponent(document.getElementById(doi));
-      this.setActivePublication(doi);
+      if (doi !== this.activePublication?.doi) {
+        logEvent("Activate Paper", doi)
+        this.activatePublicationComponent(document.getElementById(doi));
+        this.setActivePublication(doi);
+      }
     },
 
     exportSession: function () {
