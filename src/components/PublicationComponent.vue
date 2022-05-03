@@ -147,7 +147,7 @@
           ><em> {{ publication.container }}. </em></span
         >
         <label><span class="key">D</span>OI:</label>
-        <a @click="logDoiClick(publication.doi)" :href="publication.doiUrl">{{ publication.doi }}</a>
+        <a @click="logDoiClick(publication)" :href="publication.doiUrl">{{ publication.doi }}</a>
       </div>
       <div v-if="publication.isActive" class="stats-and-links level is-size-7">
         <div class="level-left">
@@ -267,8 +267,8 @@ export default {
   },
 
   methods: {
-    logDoiClick(doi) {
-      logEvent("DOI clicked", doi);
+    logDoiClick(publication) {
+      logEvent("DOI clicked", publication.doi, JSON.stringify(publication));
     },
   }
 };

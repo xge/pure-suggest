@@ -119,9 +119,11 @@ export default {
         dois = [dois];
       }
 
+      const positionsInSuggestions = {};
       dois.forEach((doi) => {
-        logEvent("Add Paper", doi)
-        console.log(this.suggestedPublications.find((o) => o.doi === doi));
+        positionsInSuggestions[doi] = this.suggestedPublications.findIndex(
+          (publication) => publication.doi === doi
+        ) + 1; //human-friendly indexing
       });
 
       document.activeElement.blur();
@@ -146,10 +148,22 @@ export default {
           dois.length === 1 ? "a publication" : dois.length + " publications"
         } to selected`,
       });
+
+      dois.forEach((doi) => {
+        logEvent("Add Paper", doi, positionsInSuggestions[doi], JSON.stringify(publications[doi]));
+      });
     },
 
     removePublication: async function (doi) {
-      logEvent("Remove Paper", doi)
+      const isSelected = this.selectedPublications.findIndex(
+        (publication) => publication.doi === doi
+      ) >= 0;
+      const index = isSelected ? this.selectedPublications.findIndex(
+        (publication) => publication.doi === doi
+      ) + 1 : this.suggestedPublications.findIndex(
+        (publication) => publication.doi === doi
+      ) + 1;
+      logEvent("Remove Paper", doi, isSelected ? 'selected' : 'suggested', index, JSON.stringify(publications[doi]));
       this.excludedPublicationsDois.add(doi);
       delete publications[doi];
       await this.updateSuggestions();
@@ -268,7 +282,7 @@ export default {
 
     activatePublicationComponentByDoi: function (doi, component) {
       if (doi !== this.activePublication?.doi) {
-        logEvent("Activate Paper", component, doi)
+        logEvent("Activate Paper", doi, component, JSON.stringify(publications[doi]));
         this.setActivePublication(doi);
         this.activatePublicationComponent(document.getElementById(doi));
       }
@@ -304,7 +318,7 @@ export default {
     },
 
     exportSingleBibtex: function (publication) {
-      logEvent("Export Single Bibtex", publication.doi)
+      logEvent("Export Single Bibtex", publication.doi, JSON.stringify(publication));
       this.exportBibtex([publication]);
     },
 
