@@ -9,6 +9,7 @@
 
 <script>
 import { getEventLog } from '@/Logging';
+import emailjs from 'emailjs-com';
 
 export default {
   name: "FinishStudyButton",
@@ -19,7 +20,12 @@ export default {
           message: `Event Log: <pre>${getEventLog()}</pre>`,
           confirmText: 'Send Data',
           onConfirm: () => {
-            this.$buefy.toast.open('Study finished. So far this is a dummy, but it should send the data now.');
+            try {
+              emailjs.send('service_xmeebc3', 'template_1pzo6di', { log: getEventLog() }, 'TlHOLDpCvCNq7zjnL')
+            } catch(error) {
+                console.log({error})
+            }
+            this.$buefy.toast.open('Study finished. An email with the event log should be on the way now.');
           },
       })
     },
