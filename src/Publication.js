@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-import { cachedFetch } from "./Cache.js";
+import { cachedFetch, preloadPublications } from "./Cache.js";
 import { shuffle } from "./Util.js"
 
 export default class Publication {
@@ -293,6 +293,7 @@ export default class Publication {
         console.log(`Filtered suggestions to ${filteredSuggestions.length} top candidates, loading metadata for these.`);
         let publicationsLoadedCount = 0;
         updateLoadingToast(`${publicationsLoadedCount}/${filteredSuggestions.length} suggestions loaded`, "is-info");
+        await preloadPublications(filteredSuggestions.map(publication => publication.doi));
         await Promise.all(filteredSuggestions.map(async (suggestedPublication) => {
             await suggestedPublication.fetchData()
             publicationsLoadedCount++;
